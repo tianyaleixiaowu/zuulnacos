@@ -1,0 +1,17 @@
+zuul:
+  routes:
+    one:
+      path: /auth/**
+      serviceId: auth
+      #url: http://localhost:8888/baoban/
+    two:
+      path: /core/**
+      serviceId: core
+  prefix: /dmp
+spring:
+  application:
+    name: zuulnacos
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER:localhost:8848}
