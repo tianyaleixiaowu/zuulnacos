@@ -15,3 +15,18 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_SERVER:localhost:8848}
+###############################---jwt---##############################
+jwt:
+  # 加密秘钥
+  secret: f4e2e5203434xx1WET12^%3^(WE45
+  # token有效时长，7天，单位秒
+  expire: 604800
+  header: token
+###############################---log---##############################
+logging:
+  file: ./logback.log
+###############################---网关忽略校验的地址---##############################
+gate:
+  ignore:
+    startWith: ${zuul.prefix}/auth, ${zuul.prefix}/about, ${zuul.prefix}/test
+    contain: ., test
