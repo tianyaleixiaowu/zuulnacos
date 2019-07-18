@@ -7,10 +7,10 @@ zuul:
     two:
       path: /core/**
       serviceId: core
-  prefix: /dmp
+  prefix: /newdmp
 spring:
   application:
-    name: zuulnacos
+    name: zuuldmp
   cloud:
     nacos:
       discovery:
