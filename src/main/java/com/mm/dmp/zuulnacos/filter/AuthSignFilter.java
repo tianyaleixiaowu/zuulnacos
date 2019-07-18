@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.mm.dmp.zuulnacos.Constant.SYS;
 import static com.mm.dmp.zuulnacos.Constant.USER_ID;
+import static com.mm.dmp.zuulnacos.Constant.USER_TYPE;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -81,8 +81,8 @@ public class AuthSignFilter extends ZuulFilter {
         }
 
         //校验state
-        String userId = (String) claims.get("userId");
-        String sys = (String) claims.get("sys");
+        String userId = (String) claims.get(USER_ID);
+        String userType = (String) claims.get(USER_TYPE);
         //if (!ptUserService.checkState(Long.valueOf(userId))) {
         //    throw new NoLoginException();
         //}
@@ -93,7 +93,7 @@ public class AuthSignFilter extends ZuulFilter {
             //return noAuth(exchange);
         //}
         ctx.addZuulRequestHeader(USER_ID, userId);
-        ctx.addZuulRequestHeader(SYS, sys);
+        ctx.addZuulRequestHeader(USER_TYPE, userType);
 
         return null;
     }
