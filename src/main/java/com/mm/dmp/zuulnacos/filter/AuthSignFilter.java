@@ -81,7 +81,7 @@ public class AuthSignFilter extends ZuulFilter {
         }
 
         //校验state
-        String userId = (String) claims.get(USER_ID);
+        String userId = claims.get(USER_ID) + "";
         String userType = (String) claims.get(USER_TYPE);
         //if (!ptUserService.checkState(Long.valueOf(userId))) {
         //    throw new NoLoginException();
