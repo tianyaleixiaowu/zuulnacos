@@ -7,7 +7,7 @@ zuul:
     two:
       path: /core/**
       serviceId: core
-  prefix: /newdmp
+  prefix: /zuuldmp
 spring:
   application:
     name: zuuldmp
