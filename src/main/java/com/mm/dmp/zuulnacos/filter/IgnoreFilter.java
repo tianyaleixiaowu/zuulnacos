@@ -51,6 +51,8 @@ public class IgnoreFilter extends ZuulFilter {
         if (isStartWith(requestPath) || isContains(requestPath)) {
             //不进行后续的过滤
             ctx.set("continue", false);
+        } else {
+            ctx.set("continue", true);
         }
         return null;
     }
