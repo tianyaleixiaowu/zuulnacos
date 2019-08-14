@@ -15,4 +15,8 @@ public class NoLoginException extends ZuulException {
     public NoLoginException() {
         super("没有权限", 401, "");
     }
+
+    public NoLoginException(int code, String msg) {
+        super(msg, code, "");
+    }
 }

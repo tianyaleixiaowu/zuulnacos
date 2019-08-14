@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk-alpine
 
-ADD zuulnacos-0.0.1-SNAPSHOT.jar /tmp/app.jar
+ADD http://cdn.tianyalei.com/docker/dmp/zuulnacos-0.0.1-SNAPSHOT.jar /tmp/app.jar
 VOLUME /tmp
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en

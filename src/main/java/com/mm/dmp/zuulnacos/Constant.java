@@ -5,6 +5,7 @@ package com.mm.dmp.zuulnacos;
  */
 public interface Constant {
     String USER_ID = "userId";
+    String ROLE_ID = "roleId";
     String USER_TYPE = "userType";
 
     String AUTHORIZATION = "Authorization";

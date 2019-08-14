@@ -20,12 +20,25 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.tianyalei.zuul</groupId>
+            <artifactId>zuulauth-spring-boot-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/zuulauth-spring-boot-starter-0.0.1-SNAPSHOT.jar</systemPath>
+        </dependency>
         <!-- nacos begin-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
         <!-- nacos end-->
+        <!--feign-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!--feign end-->
         <!--jwt begin-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -38,6 +51,10 @@
             <version>2.9.5</version>
         </dependency>
         <!--jwt end-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -79,6 +96,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>

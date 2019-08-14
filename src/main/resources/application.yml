@@ -15,6 +15,11 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_SERVER:localhost:8848}
+  ###############################---redis---##############################
+  redis:
+     host: ${REDIS_HOST:127.0.0.1}
+     port: ${REDIS_PORT:6379}
+     password: ${REDIS_PASSWORD:}
 ###############################---jwt---##############################
 jwt:
   # 加密秘钥
@@ -28,5 +33,5 @@ logging:
 ###############################---网关忽略校验的地址---##############################
 gate:
   ignore:
-    startWith: ${zuul.prefix}/auth, ${zuul.prefix}/about, ${zuul.prefix}/test
-    contain: ., test
+    startWith: ${zuul.prefix}/about, ${zuul.prefix}/test
+    contain: ., test, login
