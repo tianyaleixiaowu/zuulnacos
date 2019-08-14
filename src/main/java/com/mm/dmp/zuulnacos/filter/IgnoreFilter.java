@@ -62,7 +62,7 @@ public class IgnoreFilter extends ZuulFilter {
      */
     private boolean isContains(String requestUri) {
         for (String s : contain.split(",")) {
-            if (requestUri.contains(s)) {
+            if (requestUri.contains(s.trim())) {
                 return true;
             }
         }
@@ -74,7 +74,7 @@ public class IgnoreFilter extends ZuulFilter {
      */
     private boolean isStartWith(String requestUri) {
         for (String s : startWith.split(",")) {
-            if (requestUri.startsWith(s)) {
+            if (requestUri.startsWith(s.trim())) {
                 return true;
             }
         }
