@@ -12,17 +12,15 @@ import com.tianyalei.zuul.zuulauth.zuul.AuthInfoHolder;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.netflix.zuul.filters.Route;
-import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Set;
 
-import static com.mm.dmp.zuulnacos.Constant.*;
+import static com.mm.dmp.zuulnacos.Constant.USER_ID;
+import static com.mm.dmp.zuulnacos.Constant.USER_TYPE;
 import static com.tianyalei.zuul.zuulauth.zuul.AuthChecker.*;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -38,9 +36,9 @@ public class PermissionFilter extends ZuulFilter {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
-    private RouteLocator routeLocator;
-    @Resource
     private AuthChecker authChecker;
+    @Resource
+    private AuthInfoHolder authInfoHolder;
     @Resource
     private AuthFeignClient authFeignClient;
 
@@ -79,48 +77,34 @@ public class PermissionFilter extends ZuulFilter {
             throw new NoLoginException();
         }
 
-        //校验role
+        //获取userId和userRole
         String userId = claims.get(USER_ID) + "";
-        String roleId = claims.get(ROLE_ID) + "";
         String userType = (String) claims.get(USER_TYPE);
 
-        //从redis读取，可能为空，就需要从auth服务读取
-        Set<String> userCodes = AuthInfoHolder.findByRole(roleId);
-        if (CollectionUtils.isEmpty(userCodes)) {
-            String codes = authFeignClient.findCodesByRole(Long.valueOf(roleId));
-            userCodes = FastJsonUtils.toBean(codes, Set.class);
-        }
-
-        //类似于  /zuuldmp/core/test
-        String requestPath = serverHttpRequest.getRequestURI();
-        //获取请求的method
-        String method = serverHttpRequest.getMethod().toUpperCase();
-        //获取所有路由信息，找到该请求对应的appName
-        List<Route> routeList = routeLocator.getRoutes();
-        //Route{id='one', fullPath='/zuuldmp/auth/**', path='/**', location='auth', prefix='/zuuldmp/auth',
-        String appName = null;
-        String path = null;
-        for (Route route : routeList) {
-            if (requestPath.startsWith(route.getPrefix())) {
-                //取到该请求对应的微服务名字
-                appName = route.getLocation();
-                path = requestPath.replace(route.getPrefix(), "");
-            }
-        }
-        if (appName == null) {
-            throw new NoLoginException(404, "不存在的服务");
-        }
-
         //取到该用户的role、permission
+        //从自己内存读取，可能为空，说明redis里没有，就需要从auth服务读取
+        Set<String> userRoles = authInfoHolder.findByUser(userId);
+        if (CollectionUtils.isEmpty(userRoles)) {
+            String roles = authFeignClient.findRolesByUser(Long.valueOf(userId));
+            userRoles = FastJsonUtils.toBean(roles, Set.class);
+        }
+        if (CollectionUtils.isEmpty(userRoles)) {
+            throw new NoLoginException(407, "该用户尚未分配角色");
+        }
+        Set<String> roleCodes = authInfoHolder.findByRole(userRoles.iterator().next());
+        if (CollectionUtils.isEmpty(roleCodes)) {
+            String codes = authFeignClient.findCodesByRole(Long.valueOf(userRoles.iterator().next()));
+            roleCodes = FastJsonUtils.toBean(codes, Set.class);
+        }
+
         //访问  auth 服务的 GET  /project/my 接口
-        int code = authChecker.check(appName,
-                method,
-                path,
-                userType,
-                userCodes);
+        int code = authChecker.check(
+                serverHttpRequest,
+                userType, //这里正常应该是userRoles。但是我的业务是根据USER_TYPE在代码里作为RequireRole的。按自己的实际填写
+                roleCodes);
         switch (code) {
             case CODE_NO_APP:
-                throw new NoLoginException(code, "权限不够");
+                throw new NoLoginException(code, "不存在的服务");
             case CODE_404:
                 throw new NoLoginException(code, "无此接口或GET POST方法不对");
             case CODE_NO_ROLE:
@@ -130,7 +114,6 @@ public class PermissionFilter extends ZuulFilter {
             case CODE_OK:
                 ctx.addZuulRequestHeader(USER_ID, userId);
                 ctx.addZuulRequestHeader(USER_TYPE, userType);
-                ctx.addZuulRequestHeader(ROLE_ID, roleId);
             default:
                 break;
         }

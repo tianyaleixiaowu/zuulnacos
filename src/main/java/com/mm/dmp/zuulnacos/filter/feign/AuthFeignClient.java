@@ -13,4 +13,6 @@ public interface AuthFeignClient {
     @GetMapping(value = "/role/codes")
     String findCodesByRole(@RequestParam(name = "roleId") Long roleId);
 
+    @GetMapping(value = "/user/roles")
+    String findRolesByUser(@RequestParam(name = "userId") Long userId);
 }

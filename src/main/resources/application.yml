@@ -35,3 +35,6 @@ gate:
   ignore:
     startWith: ${zuul.prefix}/about, ${zuul.prefix}/test
     contain: ., test, login
+zuulauth:
+  duration:
+    code-fetch: 10
