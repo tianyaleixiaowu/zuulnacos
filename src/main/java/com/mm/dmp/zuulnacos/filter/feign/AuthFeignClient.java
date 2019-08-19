@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("auth")
 public interface AuthFeignClient {
 
-    @GetMapping(value = "/role/codes")
+    @GetMapping(value = "/fetch/codes")
     String findCodesByRole(@RequestParam(name = "roleId") Long roleId);
 
-    @GetMapping(value = "/user/roles")
+    @GetMapping(value = "/fetch/roles")
     String findRolesByUser(@RequestParam(name = "userId") Long userId);
 }
