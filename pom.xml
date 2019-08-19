@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.github.tianyaleixiaowu</groupId>
             <artifactId>zuulauth</artifactId>
-            <version>65a0b49951</version>
+            <version>e939ffddac</version>
         </dependency>
         <!-- nacos begin-->
         <dependency>
