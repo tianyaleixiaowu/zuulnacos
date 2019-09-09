@@ -34,7 +34,7 @@ logging:
 gate:
   ignore:
     startWith: ${zuul.prefix}/about, ${zuul.prefix}/test
-    contain: ., test, login
+    contain: ., test, login, sms
 zuulauth:
   duration:
     code-fetch: 10
