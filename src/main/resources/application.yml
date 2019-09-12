@@ -1,4 +1,6 @@
 zuul:
+  semaphore:
+    max-semaphores: 200
   routes:
     one:
       path: /auth/**
