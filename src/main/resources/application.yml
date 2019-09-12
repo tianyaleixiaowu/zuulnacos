@@ -1,6 +1,6 @@
 zuul:
   semaphore:
-    max-semaphores: 200
+    max-semaphores: 400
   routes:
     one:
       path: /auth/**
@@ -41,6 +41,10 @@ zuulauth:
   duration:
     code-fetch: 10
 ribbon:
+  #Ribbon允许最大连接数，即所有后端微服务实例请求并发数之和的最大值。
+  MaxTotalConnections: 400
+  #单个后端微服务实例能接收的最大请求并发数  
+  MaxConnectionsPerHost: 400
   ReadTimeout: 5000
   SocketTimeout: 5000
 hystrix:
@@ -50,3 +54,6 @@ hystrix:
         isolation:
           read:
             timeoutInMilliseconds: 5000
+server:
+  tomcat:
+    max-threads: 400
