@@ -38,3 +38,13 @@ gate:
 zuulauth:
   duration:
     code-fetch: 10
+ribbon:
+  ReadTimeout: 5000
+  SocketTimeout: 5000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          read:
+            timeoutInMilliseconds: 5000
